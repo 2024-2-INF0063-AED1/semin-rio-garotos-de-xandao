@@ -10,6 +10,7 @@ typedef struct
   int numVotos;
 } Canditado;
 
+// Função responsável por fazer um cadastrio de um candidato 
 void cadastrarCanditados(Canditado Canditado[], int n)
 {
 
