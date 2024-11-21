@@ -2,3 +2,4 @@
 # INF0063 - AED1
 
 202403003 - Gabriel Eduardo Paulino Florentino
+202302569 - Matheus Teixeira Pires
