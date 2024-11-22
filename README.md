@@ -5,7 +5,7 @@
 
 202302569 - Matheus Teixeira Pires
 
-202403003 - Gabriel Eduardo Paulino Florentino
+202302540 - Gabriel Ferreira Dos Santos
 
 ## SEÇÃO 1 (INTRODUÇÃO)
 ### Problema
