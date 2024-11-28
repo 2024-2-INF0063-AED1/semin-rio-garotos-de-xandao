@@ -115,7 +115,22 @@ void addEnd(Lista* lista, Candidato* candidato){
     }
 }
 
-//Função para remover um candidato do início da lista
+// Função que retorna um candidato que possui um determinado numero
+Candidato* findCand(Lista* lista, int numero){
+    if(lista == NULL || lista->start == NULL){
+        return NULL;
+    }
+    Candidato* temp = lista->start;
+    while(temp != NULL && temp->numero != numero){
+        temp = temp->prox;
+    }
+    if(temp == NULL){
+        return NULL;
+    }
+    return temp;
+}
+
+// Função para remover um candidato do início da lista
 void removeStart(Lista* lista){
     if(lista == NULL || lista->start == NULL){
         return;
@@ -153,6 +168,34 @@ void removeEnd(Lista* lista){
     }
 }
 
+int removerNum(Lista* lista, int numero){
+    // Encontra o candidato e o salva em "temp". Salva "NULL" se não encontar o candidato
+    if(lista == NULL){
+        return -1;
+    }
+    Candidato* cand = findCand(lista, numero);
+    if(cand == NULL){
+        return 0;
+    }
+    // Remove o candidato encontrado
+    if(cand == lista->start){
+        removeStart(lista);
+        return 1;
+    }
+    if(cand == lista->end){
+        removeEnd(lista);
+        return 1;
+    }
+    
+    Candidato* anterior = lista->start;
+    while(anterior->prox != cand){
+        anterior = anterior->prox;
+    }
+    anterior->prox = cand->prox;
+    free(cand);
+    return 1;
+}
+
 // Função para limpar uma lista completamente
 void limparLista(Lista* lista){
     if(lista == NULL || lista->start == NULL){
@@ -178,7 +221,6 @@ Candidato* buscarNumero(Lista* lista, int numero){
         temp = temp->prox;
     }
     if(temp == NULL){
-        printf("\nCandidato não encontrado.");
         return NULL;
     }
     return temp; 
@@ -196,12 +238,15 @@ void printCandidato(Candidato* candidato){
 }
 
 // Função para exibir todos os candidatos de uma lista
-void printLista(Lista* lista){
+int printLista(Lista* lista){
     if(lista == NULL){
         printf("\nLista inválida!");
-        return;
+        return -1;
     }
     Candidato* temp = lista->start;
+    if(temp == NULL){
+        return 0;
+    }
     int i = 1;
     while(temp != NULL){
         printf("\nCandidato %i", i);
@@ -209,6 +254,7 @@ void printLista(Lista* lista){
         temp = temp->prox;
         i++;
     }
+    return 1;
 }
 
 // Função para limpar o buffer após scanf
@@ -218,7 +264,7 @@ void limparBuffer(){
 
 // Função para remover o caractere \n da string
 void removerN(char* string){
-    for(int i = 1; i <= string[i] != '\0'; i++){
+    for(int i = 1; string[i] != '\0'; i++){
         if(string[i] == '\n'){
             string[i] = '\0';
             break;
@@ -245,6 +291,29 @@ void addCandMain(Lista* lista){
     scanf("%i", &candidato->numero);
     limparBuffer();
     addEnd(lista, candidato);
+}
+
+// Função para remover candidato durante a execução do programa
+void removeCandMain(Lista* lista){
+    int num;
+    printf("\nInsira o número do candidado para removê-lo (0 para cancelar): ");
+    scanf("%i", &num);
+    if(num == 0){
+        return;
+    }
+    int test = removerNum(lista, num);
+    if(test == -1){
+        printf("Lista inválida!\n\n");
+        return;
+    }
+    if(test == 0){
+        printf("Candidato não encontrado!\n");
+        return;
+    }
+    if(test == 1){
+        printf("Candidato removido.\n");
+        return;
+    }
 }
 
 // Função para mostrar as opções disponíveis na main
@@ -274,7 +343,7 @@ int loginAdministrador(){
 }
 
 int main(){
-    printf("    ### SISTEMA ELEITORAL ###\n");
+    printf("    ### SISTEMA ELEITORAL ###\n\n");
     Lista* lista = criarLista();
     int i;
     int ehAdministrador = loginAdministrador();
@@ -288,9 +357,12 @@ int main(){
                 addCandMain(lista);
                 break;
             case 2:
-                
+                removeCandMain(lista);
+                break;
             case 3:
-                printLista(lista);
+                if(printLista(lista) == 0){
+                    printf("\nNenhum candidato registrado.\n");
+                }
                 break;
         }
     } while(i != 5);
