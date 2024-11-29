@@ -9,6 +9,10 @@ e executar operações algumas operações;
 #include <string.h>
 #include <time.h>
 
+
+#define SIZENOME 100
+#define SIZEPARTIDO 40
+
 // Estrtura responsável por definir os candidatos que serão armazenados na lista de candidatos
 typedef struct Candidato {
     char* nome;
@@ -24,7 +28,7 @@ typedef struct Lista{
     Candidato* end;
 } Lista;
 
-// Função para criar uma lista de candidatos vazia
+// Função para criar uma lista de candidatos vazia e a retornar. Retorna NULL se não for possível criá-la.
 Lista* criarLista(){
     Lista* list = (Lista*) malloc(sizeof(Lista));
     if(list == NULL){
@@ -35,7 +39,7 @@ Lista* criarLista(){
     return list;
 }
 
-// Função para criar um novo candidato
+// Função para criar um novo candidato e retorná-lo. Retorna NULL se não for possível criá-lo.
 Candidato* criarCandidato(char* nome, char* partido, int numero){
     Candidato* candidato = (Candidato*) malloc(sizeof(Candidato));
     if(candidato == NULL){
@@ -50,7 +54,7 @@ Candidato* criarCandidato(char* nome, char* partido, int numero){
     return candidato;
 }
 
-// Função para verificar se o número de um candidato é igual ao de outro
+// Função para verificar se o número de um candidato é igual ao de outro. Retorna 1 se forem iguais, retorna 0 do contrário.
 int equalsCandidato(Candidato* cand1, Candidato* cand2){
     if(cand1->numero == cand2->numero){
         return 1;
@@ -58,7 +62,7 @@ int equalsCandidato(Candidato* cand1, Candidato* cand2){
     return 0;
 }
 
-// Função para verificar se já existe um candidato com um determinado número na lista
+// Função para verificar se já existe um candidato com um determinado número na lista. Retorna 1 se existir, retorna 0 do contrário.
 int equalsCandList(Lista* lista, Candidato* cand){
     Candidato* temp = lista->start;
     while(temp != NULL && temp->numero != cand->numero){
@@ -116,7 +120,7 @@ void addEnd(Lista* lista, Candidato* candidato){
     }
 }
 
-// Função que retorna um candidato que possui um determinado numero
+// Função que retorna um candidato que possui um determinado numero. Retorna NULL se não encontrá-lo.
 Candidato* findCand(Lista* lista, int numero){
     if(lista == NULL || lista->start == NULL){
         return NULL;
@@ -169,6 +173,7 @@ void removeEnd(Lista* lista){
     }
 }
 
+// Remove um candidato de uma lista a partir do seu número
 int removerNum(Lista* lista, int numero){
     // Encontra o candidato e o salva em "temp". Salva "NULL" se não encontar o candidato
     if(lista == NULL){
@@ -197,6 +202,25 @@ int removerNum(Lista* lista, int numero){
     return 1;
 }
 
+// Função para editar um candidato já existente em uma lista, indentificado pelo seu número. Retorna -1 se o candidato não for encontrado,
+// retorna 0 se já existir um candidato com o novo número, e retorna 1 se a edição for realizada com sucesso.
+int editarCandidato(Lista* lista, int numero, char* newName, char* newPartido, int newNumero){
+    Candidato* cand = findCand(lista, numero);
+    if(cand == NULL){
+        return -1;
+    }
+    cand->numero = -1;
+    if(findCand(lista, newNumero) != NULL){
+        return 0;
+    }
+    free(cand->nome);
+    free(cand->partido);
+    cand->nome = newName;
+    cand->partido = newPartido;
+    cand->numero = newNumero;
+    return 1;
+}
+
 // Função para limpar uma lista completamente
 void limparLista(Lista* lista){
     if(lista == NULL || lista->start == NULL){
@@ -211,22 +235,6 @@ void limparLista(Lista* lista){
     lista->end = NULL;
 }
 
-// Função para buscar um candidato em uma lista pelo seu número
-Candidato* buscarNumero(Lista* lista, int numero){
-    if(lista == NULL || lista->start == NULL){
-        printf("\nLista inválida.");
-        return NULL;
-    }
-    Candidato* temp = lista->start;
-    while(temp != NULL && temp->numero != numero){
-        temp = temp->prox;
-    }
-    if(temp == NULL){
-        return NULL;
-    }
-    return temp; 
-}
-
 // Função para exibir um candidato
 void printCandidato(Candidato* candidato){
     if(candidato == NULL){
@@ -238,10 +246,9 @@ void printCandidato(Candidato* candidato){
     printf("Número: %i\n", candidato->numero);
 }
 
-// Função para exibir todos os candidatos de uma lista
+// Função para exibir todos os candidatos de uma lista. Retorna -1 para lista inválida, 0
 int printLista(Lista* lista){
     if(lista == NULL){
-        printf("\nLista inválida!");
         return -1;
     }
     Candidato* temp = lista->start;
@@ -257,6 +264,10 @@ int printLista(Lista* lista){
     }
     return 1;
 }
+
+/*
+As funções a seguir são para as operações realidadas no código main, e utilizam as funções anteriores para isso.
+*/
 
 // Função para limpar o buffer após scanf
 void limparBuffer(){
@@ -276,22 +287,24 @@ void removerN(char* string){
 // Função para adicionar candidato durante a execução do programa
 void addCandMain(Lista* lista){
     Candidato* candidato = (Candidato*) malloc(sizeof(Candidato));
-    candidato->nome = (char*) malloc(101);
-    candidato->partido = (char*) malloc(41);
+    candidato->nome = (char*) malloc(SIZENOME + 1);
+    candidato->partido = (char*) malloc(SIZEPARTIDO + 1);
     if(candidato == NULL || candidato->nome == NULL || candidato->partido == NULL){
         printf("Erro de alocação de memória.");
         return;
     }
     printf("\nInsira o nome do candidato: ");
-    fgets(candidato->nome, 101, stdin);
+    fgets(candidato->nome, SIZENOME + 1, stdin);
     removerN(candidato->nome);
     printf("Insira o partido do candidato: ");
-    fgets(candidato->partido, 41, stdin);
+    fgets(candidato->partido, SIZEPARTIDO + 1, stdin);
     removerN(candidato->partido);
     printf("Insira o número do candidato: ");
     scanf("%i", &candidato->numero);
     limparBuffer();
     addEnd(lista, candidato);
+    printf("Candidato adicionado!\n");
+    return;
 }
 
 // Função para remover candidato durante a execução do programa
@@ -314,6 +327,48 @@ void removeCandMain(Lista* lista){
     if(test == 1){
         printf("Candidato removido.\n");
         return;
+    }
+}
+
+// Função para editar candidato durante a execução do programa
+void editCandMain(Lista* lista){
+    if(lista == NULL){
+        printf("Lista inválida!");
+        return;
+    }
+    int numero;
+    char* newNome = (char*) malloc(SIZENOME + 1);
+    char* newPartido = (char*) malloc(SIZEPARTIDO + 1);
+    int newNumero;
+    printf("\nInsira o número do candidato a ser editado: ");
+    scanf("%i", &numero);
+    limparBuffer();
+    Candidato* cand = findCand(lista, numero);
+    if(cand == NULL){
+        printf("Candidato não encontrado.\n");
+        return;
+    }
+    printf("Insira o novo nome: ");
+    fgets(newNome, SIZENOME + 1, stdin);
+    removerN(newNome);
+    printf("Insira o novo partido: ");
+    fgets(newPartido, SIZEPARTIDO + 1, stdin);
+    removerN(newPartido);
+    printf("Insira o novo número: ");
+    scanf("%i", &newNumero);
+    limparBuffer();
+    int teste = editarCandidato(lista, numero, newNome, newPartido, newNumero);
+    if(teste == 0){
+        printf("Já existe um candidato com esse número!\n");
+    }
+    printf("Candidato editado com sucesso!\n");
+    return;
+}
+
+// Função para exibir os candidatos na main
+void exibirCandMain(Lista* lista){
+    if(printLista(lista) == 0){
+        printf("\nNenhum candidato registrado.\n");
     }
 }
 
@@ -346,7 +401,7 @@ int loginAdministrador(){
 // Teste de métrica
 double teste(Lista* lista, int n){
     if(lista == NULL){
-        return;
+        return 0;
     }
     clock_t inicio = clock();
 
@@ -378,9 +433,10 @@ int main(){
                 removeCandMain(lista);
                 break;
             case 3:
-                if(printLista(lista) == 0){
-                    printf("\nNenhum candidato registrado.\n");
-                }
+                exibirCandMain(lista);
+                break;
+            case 4:
+                editCandMain(lista);
                 break;
         }
     } while(i != 5);
