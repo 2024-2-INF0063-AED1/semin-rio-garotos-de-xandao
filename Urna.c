@@ -7,6 +7,7 @@ e executar operações algumas operações;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // Estrtura responsável por definir os candidatos que serão armazenados na lista de candidatos
 typedef struct Candidato {
@@ -342,9 +343,26 @@ int loginAdministrador(){
     }
 }
 
+// Teste de métrica
+double teste(Lista* lista, int n){
+    if(lista == NULL){
+        return;
+    }
+    clock_t inicio = clock();
+
+    for(int i = 1; i <= n; i++){
+        Candidato* cand = criarCandidato("teste", "teste", i);
+        addEnd(lista, cand);
+    }
+    clock_t final = clock();
+    double time = (double)(final - inicio) / CLOCKS_PER_SEC;
+    return time;
+}
+
 int main(){
     printf("    ### SISTEMA ELEITORAL ###\n\n");
     Lista* lista = criarLista();
+    
     int i;
     int ehAdministrador = loginAdministrador();
     if(ehAdministrador){
@@ -369,5 +387,10 @@ int main(){
     }else {
         printf("voce não tem permissão para adicionar candidatos. \n");
     }
-    return 0;
+    
+    /* Teste de métrica
+    int nCandidatos = 20000;
+    printf("Tempo de execução: %f s", teste(lista, nCandidatos));
+    */
+   return 0;
 }
