@@ -372,30 +372,73 @@ void exibirCandMain(Lista* lista){
     }
 }
 
+void sairConfirmacao(int* i){
+    printf("\nDeseja sair ? (Os dados atuais não serão salvos)");
+    printf("\n1 - Sim");
+    printf("\n2 - Nao");
+    printf("\nResposta: ");
+    scanf("%i", i);
+    limparBuffer();
+    if(*i == 1){
+        *i = 6;
+        return;
+    }
+    if(*i == 2){
+        *i = 0;
+        return;
+    }
+    printf("Opção inválida!\n");
+    *i = 0;
+    return;
+}
+
+int iniciarConfirmar(int* i){
+    printf("\nDeseja iniciar as eleições? (As edições serão desabilitadas)");
+    printf("\n1 - Sim");
+    printf("\n2 - Nao");
+    printf("\nResposta: ");
+    scanf("%i", i);
+    limparBuffer();
+    if(*i == 1){
+        *i = 0;
+        return 1;
+    }
+    if(*i == 2){
+        *i = 0;
+        return 0;
+    }
+    printf("\nOpção inválida!\n");
+    return 0;;
+}
+
 // Função para mostrar as opções disponíveis na main
 void mostrarOpcoes(){
-    printf("\n1 - Inserir candidato\n");
-    printf("2 - Remover candidato\n");
-    printf("3 - Ver candidatos\n");
-    printf("4 - Editar candidato\n");
-    printf("5 - Sair\n");
-    printf("Insira a opção desejada: ");
+    printf("\n1 - Inserir candidato");
+    printf("\n2 - Remover candidato");
+    printf("\n3 - Ver candidatos");
+    printf("\n4 - Editar candidato");
+    printf("\n5 - Iniciar eleições");
+    printf("\n6 - Sair");
+    printf("\nInsira a opção desejada: ");
+}
+
+void mostrarOpcoesEleicoes(){
+    printf("\n1 - Votar");
+    printf("\n2 - Encerrar eleições");
+    return;
 }
 
 //adm
 int loginAdministrador(){
-
     char senha[20];
     printf("Digite a senha para acesso comno administrador: ");
     scanf("%19s", senha);
 
     if(strcmp(senha, "admin123") == 0) {
-        printf("login de administrador bem sucedido! gaRAIO\n");
+        printf("login de administrador bem sucedido!\n");
         return 1;
-    } else{
-        printf("senha incorreta. Acesso como usuario normal. \n");
-        return 0;
     }
+    return 0;
 }
 
 // Teste de métrica
@@ -417,8 +460,11 @@ double teste(Lista* lista, int n){
 int main(){
     printf("    ### SISTEMA ELEITORAL ###\n\n");
     Lista* lista = criarLista();
-    
+
+    int confirmar; // Variável para confirmar se as eleições vão iniciar ou não
+
     int i;
+    int* iptr = &i;
     int ehAdministrador = loginAdministrador();
     if(ehAdministrador){
         do{
@@ -438,15 +484,24 @@ int main(){
             case 4:
                 editCandMain(lista);
                 break;
+            case 5:
+                confirmar = iniciarConfirmar(iptr);
+                break;
+            case 6:
+                sairConfirmacao(iptr);
+                break;
+            }
+        } while(i != 6 && confirmar != 1);
+        if(confirmar == 1){
+            mostrarOpcoesEleicoes();
         }
-    } while(i != 5);
     }else {
-        printf("voce não tem permissão para adicionar candidatos. \n");
+        printf("voce não tem permissão para acessar o sistema. \n");
     }
     
     /* Teste de métrica
     int nCandidatos = 20000;
     printf("Tempo de execução: %f s", teste(lista, nCandidatos));
     */
-   return 0;
+    return 0;
 }
