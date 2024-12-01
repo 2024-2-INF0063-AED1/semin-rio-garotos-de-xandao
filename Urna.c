@@ -458,6 +458,8 @@ double teste(Lista* lista, int n){
     return time;
 }
 
+
+
 int main(){
     printf("    ### SISTEMA ELEITORAL ###\n\n");
     Lista* lista = criarLista();
@@ -479,25 +481,30 @@ int main(){
             printf("\nInsira a opção desejada: ");
             scanf("%i", &i);
             limparBuffer();
-            switch(i){
-            case 1: // Inserir candidato
-                addCandMain(lista);
-                break;
-            case 2: // Remover candidato
-                removeCandMain(lista);
-                break;
-            case 3: // Exibir candidatos
-                exibirCandMain(lista);
-                break;
-            case 4: // Editar candidato
-                editCandMain(lista);
-                break;
-            case 5: // Iniciar eleições
-                confirmar = iniciarConfirmar();
-                break;
-            case 6: // Sair do programa
-                sairConfirmacao(iptr);
-                break;
+            if(i > 0 && i < 7){
+                switch(i){
+                case 1: // Inserir candidato
+                    addCandMain(lista);
+                    break;
+                case 2: // Remover candidato
+                    removeCandMain(lista);
+                    break;
+                case 3: // Exibir candidatos
+                    exibirCandMain(lista);
+                    break;
+                case 4: // Editar candidato
+                    editCandMain(lista);
+                    break;
+                case 5: // Iniciar eleições
+                    confirmar = iniciarConfirmar();
+                    break;
+                case 6: // Sair do programa
+                    sairConfirmacao(iptr);
+                    break;
+                }
+            }
+            else{
+                printf("Opcao invalida\n");
             }
         } while(i != 6 && confirmar != 1);
         if(confirmar == 1){
@@ -588,3 +595,4 @@ int main(){
     */
     return 0;
 }
+
