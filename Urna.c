@@ -40,18 +40,41 @@ Lista* criarLista(){
 }
 
 // Função para criar um novo candidato e retorná-lo. Retorna NULL se não for possível criá-lo.
-Candidato* criarCandidato(char* nome, char* partido, int numero){
-    Candidato* candidato = (Candidato*) malloc(sizeof(Candidato));
-    if(candidato == NULL){
+// Candidato* criarCandidato(char* nome, char* partido, int numero){
+//     Candidato* candidato = (Candidato*) malloc(sizeof(Candidato));
+//     if(candidato == NULL){
+//         return NULL;
+//     }
+//     candidato->nome = (char*) malloc(strlen(nome) + 1);
+//     candidato->partido = (char*) malloc(strlen(partido) + 1);
+//     strcpy(candidato->nome, nome);
+//     strcpy(candidato->partido, partido);
+//     candidato->numero = numero;
+//     candidato->prox = NULL;
+//     candidato->votos = 0;
+//     return candidato;
+// }
+
+Candidato* criarCandidato(char* nome, char* partido, int numero) {
+    Candidato* candidato = (Candidato*) calloc(1, sizeof(Candidato));  
+    if (candidato == NULL) {
         return NULL;
     }
-    candidato->nome = (char*) malloc(strlen(nome) + 1);
-    candidato->partido = (char*) malloc(strlen(partido) + 1);
+
+    candidato->nome = (char*) calloc(strlen(nome) + 1, sizeof(char));
+    candidato->partido = (char*) calloc(strlen(partido) + 1, sizeof(char));
+
+    if (candidato->nome == NULL || candidato->partido == NULL) {
+        free(candidato);  
+        return NULL;
+    }
     strcpy(candidato->nome, nome);
     strcpy(candidato->partido, partido);
+
     candidato->numero = numero;
     candidato->prox = NULL;
     candidato->votos = 0;
+
     return candidato;
 }
 
