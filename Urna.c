@@ -51,6 +51,7 @@ Candidato* criarCandidato(char* nome, char* partido, int numero){
     strcpy(candidato->partido, partido);
     candidato->numero = numero;
     candidato->prox = NULL;
+    candidato->votos = 0;
     return candidato;
 }
 
@@ -257,7 +258,6 @@ int printLista(Lista* lista){
     }
     int i = 1;
     while(temp != NULL){
-        printf("\nCandidato %i", i);
         printCandidato(temp);
         temp = temp->prox;
         i++;
@@ -312,6 +312,7 @@ void removeCandMain(Lista* lista){
     int num;
     printf("\nInsira o número do candidado para removê-lo (0 para cancelar): ");
     scanf("%i", &num);
+    limparBuffer();
     if(num == 0){
         return;
     }
@@ -372,6 +373,7 @@ void exibirCandMain(Lista* lista){
     }
 }
 
+// Função para confirmar se o usuário realmente deseja sair do programa, para evitar missclick
 void sairConfirmacao(int* i){
     printf("\nDeseja sair ? (Os dados atuais não serão salvos)");
     printf("\n1 - Sim");
@@ -408,7 +410,7 @@ int iniciarConfirmar(){
         limparBuffer();
 
         while(strcmp(senha, "admin123") != 0 && strcmp(senha, "0") != 0){
-            printf("\nSenha incorreta! Tente novamente (0 para cancelar)");
+            printf("Senha incorreta! Tente novamente (0 para cancelar)");
             scanf("%19s", senha);
             limparBuffer();
         }
@@ -425,29 +427,12 @@ int iniciarConfirmar(){
     return 0;;
 }
 
-// Função para mostrar as opções disponíveis no menu
-void mostrarOpcoes(){
-    printf("\n1 - Inserir candidato");
-    printf("\n2 - Remover candidato");
-    printf("\n3 - Ver candidatos");
-    printf("\n4 - Editar candidato");
-    printf("\n5 - Iniciar eleições");
-    printf("\n6 - Sair");
-    printf("\nInsira a opção desejada: ");
-}
-
-// Função para mostrar as opções disponíveis na eleição
-void mostrarOpcoesEleicoes(){
-    printf("\n1 - Votar");
-    printf("\n2 - Encerrar eleições");
-    return;
-}
-
-//adm
+// ADM
 int loginAdministrador(){
     char senha[20];
     printf("Digite a senha para acesso como administrador: ");
     scanf("%19s", senha);
+    limparBuffer();
 
     if(strcmp(senha, "admin123") == 0) {
         printf("login de administrador bem sucedido!\n");
@@ -456,7 +441,7 @@ int loginAdministrador(){
     return 0;
 }
 
-// Teste de métrica
+// Teste de métrica, retorna o tempo necessário para inserir n candidatos
 double teste(Lista* lista, int n){
     if(lista == NULL){
         return 0;
@@ -478,43 +463,122 @@ int main(){
 
     int confirmar; // Variável para confirmar se as eleições vão iniciar ou não
 
+    int votosNulos = 0;
     int i;
     int* iptr = &i;
     int ehAdministrador = loginAdministrador();
     if(ehAdministrador){
         do{
-            mostrarOpcoes();
+            printf("\n1 - Inserir candidato");
+            printf("\n2 - Remover candidato");
+            printf("\n3 - Ver candidatos");
+            printf("\n4 - Editar candidato");
+            printf("\n5 - Iniciar eleições");
+            printf("\n6 - Sair");
+            printf("\nInsira a opção desejada: ");
             scanf("%i", &i);
             limparBuffer();
             switch(i){
-            case 1:
+            case 1: // Inserir candidato
                 addCandMain(lista);
                 break;
-            case 2:
+            case 2: // Remover candidato
                 removeCandMain(lista);
                 break;
-            case 3:
+            case 3: // Exibir candidatos
                 exibirCandMain(lista);
                 break;
-            case 4:
+            case 4: // Editar candidato
                 editCandMain(lista);
                 break;
-            case 5:
+            case 5: // Iniciar eleições
                 confirmar = iniciarConfirmar();
                 break;
-            case 6:
+            case 6: // Sair do programa
                 sairConfirmacao(iptr);
                 break;
             }
         } while(i != 6 && confirmar != 1);
         if(confirmar == 1){
-            mostrarOpcoesEleicoes();
+            int j;
+            int k;
+            int numero;
+            do{
+                printf("\n1 - Votar");
+                printf("\n2 - Encerrar eleições");
+                printf("\nResposta: ");
+                scanf("%i", &j);
+                limparBuffer();
+                if(j == 1){
+                    k = 0;
+                    printf("\nInsira o número do candidato: ");
+                    scanf("%i", &numero);
+                    limparBuffer();
+                    Candidato* candidato = findCand(lista, numero);
+                    if(candidato != NULL){
+                        printCandidato(candidato);
+                        printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
+                        scanf("%i", &k);
+                        limparBuffer();
+                        if(k == 1){
+                            candidato->votos+=1;
+                            printf("Voto registrado com sucesso! Pilililili\n");
+                        }
+                        if(k != 1 && k != 2){
+                            printf("Opção inválida!\n");
+                        }
+                    }
+                    else{
+                        printf("\nCandidato inexistente! Deseja votar nulo? ");
+                        printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
+                        scanf("%i", &k);
+                        limparBuffer();
+                        if(k == 1){
+                            votosNulos+=1;
+                            printf("Voto registrado com sucesso! Pilililili\n");
+                        }
+                        if(k != 1 && k != 2){
+                            printf("Opção inválida!\n");
+                        }
+                    }
+                }
+                if(j == 2){
+                    char senha[20];
+                    printf("\nDeseja encerrar as eleições?");
+                    printf("\n1 - Sim \n2 - Não \nResposta: ");
+                    scanf("%i", &k);
+                    limparBuffer();
+                    if(k == 1){
+                        printf("\nDigite a senha de acesso do administrador (0 para cancelar): ");
+                        scanf("%19s", senha);
+                        limparBuffer();
+
+                        while(strcmp(senha, "admin123") != 0 && strcmp(senha, "0") != 0){
+                            printf("Senha incorreta! Tente novamente (0 para cancelar)");
+                            scanf("%19s", senha);
+                            limparBuffer();
+                        }
+
+                        if(strcmp(senha, "admin123") == 0){
+                            j = 2;
+                        }
+                    }
+                    if(k != 1 && k != 2){
+                        printf("\nOpção inválida!\n ");
+                        j = 0;
+                    }
+                    if(k == 2){
+                        j = 0;
+                    }
+                }
+            } while(j != 2);
         }
     }else {
         printf("voce não tem permissão para acessar o sistema. \n");
     }
     
-    /* Teste de métrica
+    /*
+    //Teste de métrica
     int nCandidatos = 20000;
     printf("Tempo de execução: %f s", teste(lista, nCandidatos));
     */
