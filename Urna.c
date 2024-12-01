@@ -392,26 +392,40 @@ void sairConfirmacao(int* i){
     return;
 }
 
-int iniciarConfirmar(int* i){
+// Função para fazer a confirmação antes de iniciar as eleições. Retorna 1 se a confirmação for bem sucedida, 0 do contrário.
+int iniciarConfirmar(){
+    int i;
+    char senha[20];
     printf("\nDeseja iniciar as eleições? (As edições serão desabilitadas)");
     printf("\n1 - Sim");
     printf("\n2 - Nao");
     printf("\nResposta: ");
-    scanf("%i", i);
+    scanf("%i", &i);
     limparBuffer();
-    if(*i == 1){
-        *i = 0;
-        return 1;
+    if(i == 1){
+        printf("\nDigite a senha de acesso do administrador (0 para cancelar): ");
+        scanf("%19s", senha);
+        limparBuffer();
+
+        while(strcmp(senha, "admin123") != 0 && strcmp(senha, "0") != 0){
+            printf("\nSenha incorreta! Tente novamente (0 para cancelar)");
+            scanf("%19s", senha);
+            limparBuffer();
+        }
+
+        if(strcmp(senha, "admin123") == 0){
+            return 1;
+        }
+        return 0;
     }
-    if(*i == 2){
-        *i = 0;
+    if(i == 2){
         return 0;
     }
     printf("\nOpção inválida!\n");
     return 0;;
 }
 
-// Função para mostrar as opções disponíveis na main
+// Função para mostrar as opções disponíveis no menu
 void mostrarOpcoes(){
     printf("\n1 - Inserir candidato");
     printf("\n2 - Remover candidato");
@@ -422,6 +436,7 @@ void mostrarOpcoes(){
     printf("\nInsira a opção desejada: ");
 }
 
+// Função para mostrar as opções disponíveis na eleição
 void mostrarOpcoesEleicoes(){
     printf("\n1 - Votar");
     printf("\n2 - Encerrar eleições");
@@ -431,7 +446,7 @@ void mostrarOpcoesEleicoes(){
 //adm
 int loginAdministrador(){
     char senha[20];
-    printf("Digite a senha para acesso comno administrador: ");
+    printf("Digite a senha para acesso como administrador: ");
     scanf("%19s", senha);
 
     if(strcmp(senha, "admin123") == 0) {
@@ -485,7 +500,7 @@ int main(){
                 editCandMain(lista);
                 break;
             case 5:
-                confirmar = iniciarConfirmar(iptr);
+                confirmar = iniciarConfirmar();
                 break;
             case 6:
                 sairConfirmacao(iptr);
