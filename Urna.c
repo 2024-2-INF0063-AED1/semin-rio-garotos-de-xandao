@@ -236,8 +236,8 @@ void limparLista(Lista* lista){
     lista->end = NULL;
 }
 
-// Função para exibir um candidato
-void printCandidato(Candidato* candidato){
+// Função para exibir um candidato. Se "imprimirVotos" = 1, os votos serão imprimidos. Do contrário, não serão.
+void printCandidato(Candidato* candidato, int imprimirVotos){
     if(candidato == NULL){
         printf("\nCandidato inválido!");
         return;
@@ -245,10 +245,14 @@ void printCandidato(Candidato* candidato){
     printf("\nNome: %s\n", candidato->nome);
     printf("Partido: %s\n", candidato->partido);
     printf("Número: %i\n", candidato->numero);
+    if(imprimirVotos == 1){
+        printf("Votos: %i\n", candidato->votos);
+    }
 }
 
-// Função para exibir todos os candidatos de uma lista. Retorna -1 para lista inválida, 0
-int printLista(Lista* lista){
+// Função para exibir todos os candidatos de uma lista. Retorna -1 para lista inválida, 0 para lista vazia e 1 do contrário.
+// Se "imprimirVotos" = 1, os votos serão imprimidos. Do contrário, não serão.
+int printLista(Lista* lista, int imprimirVotos){
     if(lista == NULL){
         return -1;
     }
@@ -258,7 +262,7 @@ int printLista(Lista* lista){
     }
     int i = 1;
     while(temp != NULL){
-        printCandidato(temp);
+        printCandidato(temp, imprimirVotos);
         temp = temp->prox;
         i++;
     }
@@ -286,22 +290,19 @@ void removerN(char* string){
 
 // Função para adicionar candidato durante a execução do programa
 void addCandMain(Lista* lista){
-    Candidato* candidato = (Candidato*) malloc(sizeof(Candidato));
-    candidato->nome = (char*) malloc(SIZENOME + 1);
-    candidato->partido = (char*) malloc(SIZEPARTIDO + 1);
-    if(candidato == NULL || candidato->nome == NULL || candidato->partido == NULL){
-        printf("Erro de alocação de memória.");
-        return;
-    }
+    char* nome = (char*) malloc(SIZENOME + 1);
+    char* partido = (char*) malloc(SIZEPARTIDO + 1);
+    int numero;
     printf("\nInsira o nome do candidato: ");
-    fgets(candidato->nome, SIZENOME + 1, stdin);
-    removerN(candidato->nome);
+    fgets(nome, SIZENOME + 1, stdin);
+    removerN(nome);
     printf("Insira o partido do candidato: ");
-    fgets(candidato->partido, SIZEPARTIDO + 1, stdin);
-    removerN(candidato->partido);
+    fgets(partido, SIZEPARTIDO + 1, stdin);
+    removerN(partido);
     printf("Insira o número do candidato: ");
-    scanf("%i", &candidato->numero);
+    scanf("%i", &numero);
     limparBuffer();
+    Candidato* candidato = criarCandidato(nome, partido, numero);
     addEnd(lista, candidato);
     printf("Candidato adicionado!\n");
     return;
@@ -368,7 +369,7 @@ void editCandMain(Lista* lista){
 
 // Função para exibir os candidatos na main
 void exibirCandMain(Lista* lista){
-    if(printLista(lista) == 0){
+    if(printLista(lista, 0) == 0){
         printf("\nNenhum candidato registrado.\n");
     }
 }
@@ -516,12 +517,12 @@ int main(){
                     limparBuffer();
                     Candidato* candidato = findCand(lista, numero);
                     if(candidato != NULL){
-                        printCandidato(candidato);
+                        printCandidato(candidato, 0);
                         printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
                         scanf("%i", &k);
                         limparBuffer();
                         if(k == 1){
-                            candidato->votos+=1;
+                            candidato->votos = candidato->votos + 1;
                             printf("Voto registrado com sucesso! Pilililili\n");
                         }
                         if(k != 1 && k != 2){
@@ -572,6 +573,9 @@ int main(){
                     }
                 }
             } while(j != 2);
+            printf("        \n### Resultados ###\n\n");
+            printLista(lista, 1);
+
         }
     }else {
         printf("voce não tem permissão para acessar o sistema. \n");
