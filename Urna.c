@@ -8,7 +8,7 @@ e executar operações algumas operações;
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <ctype.h>
 
 #define SIZENOME 100
 #define SIZEPARTIDO 40
@@ -30,7 +30,7 @@ typedef struct Lista{
 
 // Função para criar uma lista de candidatos vazia e a retornar. Retorna NULL se não for possível criá-la.
 Lista* criarLista(){
-    Lista* list = (Lista*) malloc(sizeof(Lista));
+    Lista* list = (Lista*) calloc(1, sizeof(Lista));
     if(list == NULL){
         return NULL;
     }
@@ -323,6 +323,7 @@ void addCandMain(Lista* lista){
     char* nome = (char*) malloc(SIZENOME + 1);
     char* partido = (char*) malloc(SIZEPARTIDO + 1);
     int numero;
+    char* charNumero = (char*) malloc(40);
     printf("\nInsira o nome do candidato: ");
     fgets(nome, SIZENOME + 1, stdin);
     removerN(nome);
@@ -330,8 +331,21 @@ void addCandMain(Lista* lista){
     fgets(partido, SIZEPARTIDO + 1, stdin);
     removerN(partido);
     printf("Insira o número do candidato: ");
-    scanf("%i", &numero);
-    limparBuffer();
+    fgets(charNumero, 40, stdin);
+    removerN(charNumero);
+    int i = 0;
+    while(charNumero[i] != '\0' && i != -1){
+        if(isdigit(charNumero[i]) == 0){
+            i = -1;
+            break;
+        }
+        i+=1;
+    }
+    if(i == -1){
+        puts("Número inválido!\n");
+        return;
+    }
+    numero = atoi(charNumero);
     Candidato* candidato = criarCandidato(nome, partido, numero);
     addEnd(lista, candidato);
     printf("Candidato adicionado!\n");
