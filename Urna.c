@@ -63,6 +63,13 @@ int equalsCandidato(Candidato* cand1, Candidato* cand2){
     return 0;
 }
 
+int temCandidato(Lista *lista){
+    if(lista -> start != NULL)
+        return 1;
+    
+    return 0;
+
+}
 // Função para verificar se já existe um candidato com um determinado número na lista. Retorna 1 se existir, retorna 0 do contrário.
 int equalsCandList(Lista* lista, Candidato* cand){
     Candidato* temp = lista->start;
@@ -310,6 +317,7 @@ void addCandMain(Lista* lista){
 
 // Função para remover candidato durante a execução do programa
 void removeCandMain(Lista* lista){
+    
     int num;
     printf("\nInsira o número do candidado para removê-lo (0 para cancelar): ");
     scanf("%i", &num);
@@ -396,36 +404,44 @@ void sairConfirmacao(int* i){
 }
 
 // Função para fazer a confirmação antes de iniciar as eleições. Retorna 1 se a confirmação for bem sucedida, 0 do contrário.
-int iniciarConfirmar(){
+int iniciarConfirmar(Lista *lista){
     int i;
     char senha[20];
-    printf("\nDeseja iniciar as eleições? (As edições serão desabilitadas)");
-    printf("\n1 - Sim");
-    printf("\n2 - Nao");
-    printf("\nResposta: ");
-    scanf("%i", &i);
-    limparBuffer();
-    if(i == 1){
-        printf("\nDigite a senha de acesso do administrador (0 para cancelar): ");
-        scanf("%19s", senha);
-        limparBuffer();
+    if(temCandidato(lista)){
 
-        while(strcmp(senha, "admin123") != 0 && strcmp(senha, "0") != 0){
-            printf("Senha incorreta! Tente novamente (0 para cancelar)");
+        printf("\nDeseja iniciar as eleições? (As edições serão desabilitadas)");
+        printf("\n1 - Sim");
+        printf("\n2 - Nao");
+        printf("\nResposta: ");
+        scanf("%i", &i);
+        limparBuffer();
+        if(i == 1){
+            printf("\nDigite a senha de acesso do administrador (0 para cancelar): ");
             scanf("%19s", senha);
             limparBuffer();
+
+            while(strcmp(senha, "admin123") != 0 && strcmp(senha, "0") != 0){
+                printf("Senha incorreta! Tente novamente (0 para cancelar)");
+                scanf("%19s", senha);
+                limparBuffer();
+            }
+
+            if(strcmp(senha, "admin123") == 0){
+                return 1;
+            }
+
+        return 0;
         }
 
-        if(strcmp(senha, "admin123") == 0){
-            return 1;
+        if(i == 2){
+            return 0;
         }
-        return 0;
+        printf("\nOpção inválida!\n");
     }
-    if(i == 2){
-        return 0;
-    }
-    printf("\nOpção inválida!\n");
-    return 0;;
+    else if(!(temCandidato(lista)))
+        puts("Não há candidatos cadastrados\n");
+
+    return 0;
 }
 
 // ADM
@@ -496,7 +512,7 @@ int main(){
                     editCandMain(lista);
                     break;
                 case 5: // Iniciar eleições
-                    confirmar = iniciarConfirmar();
+                    confirmar = iniciarConfirmar(lista);
                     break;
                 case 6: // Sair do programa
                     sairConfirmacao(iptr);
