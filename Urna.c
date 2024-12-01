@@ -12,6 +12,7 @@ e executar operações algumas operações;
 
 #define SIZENOME 100
 #define SIZEPARTIDO 40
+#define SIZENUMERO 50
 
 // Estrtura responsável por definir os candidatos que serão armazenados na lista de candidatos
 typedef struct Candidato {
@@ -126,6 +127,7 @@ void addStart(Lista* lista, Candidato* candidato){
         printf("\nCandidato já existe!");
         return;
     }
+    return;
 }
 
 // Função para adicionar um candidato ao final de uma lista
@@ -240,8 +242,10 @@ int editarCandidato(Lista* lista, int numero, char* newName, char* newPartido, i
     if(cand == NULL){
         return -1;
     }
+    int temp = cand->numero;
     cand->numero = -1;
     if(findCand(lista, newNumero) != NULL){
+        cand->numero = temp;
         return 0;
     }
     free(cand->nome);
@@ -323,7 +327,7 @@ void addCandMain(Lista* lista){
     char* nome = (char*) malloc(SIZENOME + 1);
     char* partido = (char*) malloc(SIZEPARTIDO + 1);
     int numero;
-    char* charNumero = (char*) malloc(40);
+    char* charNumero = (char*) malloc(SIZENUMERO + 1);
     printf("\nInsira o nome do candidato: ");
     fgets(nome, SIZENOME + 1, stdin);
     removerN(nome);
@@ -331,7 +335,7 @@ void addCandMain(Lista* lista){
     fgets(partido, SIZEPARTIDO + 1, stdin);
     removerN(partido);
     printf("Insira o número do candidato: ");
-    fgets(charNumero, 40, stdin);
+    fgets(charNumero, SIZENUMERO + 1, stdin);
     removerN(charNumero);
     int i = 0;
     while(charNumero[i] != '\0' && i != -1){
@@ -346,6 +350,13 @@ void addCandMain(Lista* lista){
         return;
     }
     numero = atoi(charNumero);
+    
+    if(findCand(lista, numero) != NULL){
+        puts("Candidato já existente!");
+        free(nome);
+        free(partido);
+        return;
+    }
     Candidato* candidato = criarCandidato(nome, partido, numero);
     addEnd(lista, candidato);
     printf("Candidato adicionado!\n");
@@ -393,6 +404,7 @@ void editCandMain(Lista* lista){
         char* newNome = (char*) malloc(SIZENOME + 1);
         char* newPartido = (char*) malloc(SIZEPARTIDO + 1);
         int newNumero;
+        char* charNewNumero = (char*) malloc(SIZENUMERO + 1);
         printf("\nInsira o número do candidato a ser editado: ");
         scanf("%i", &numero);
         limparBuffer();
@@ -408,11 +420,25 @@ void editCandMain(Lista* lista){
         fgets(newPartido, SIZEPARTIDO + 1, stdin);
         removerN(newPartido);
         printf("Insira o novo número: ");
-        scanf("%i", &newNumero);
-        limparBuffer();
+        fgets(charNewNumero, SIZENUMERO + 1, stdin);
+        removerN(charNewNumero);
+        int i = 0;
+        while(charNewNumero[i] != '\0' && i != -1){
+            if(isdigit(charNewNumero[i]) == 0){
+                i = -1;
+                break;
+            }
+            i+=1;
+        }
+        if(i == -1){
+            puts("Número inválido!\n");
+            return;
+        }
+        newNumero = atoi(charNewNumero);
         int teste = editarCandidato(lista, numero, newNome, newPartido, newNumero);
         if(teste == 0){
             printf("Já existe um candidato com esse número!\n");
+            return;
         }
         printf("Candidato editado com sucesso!\n");
         return;
