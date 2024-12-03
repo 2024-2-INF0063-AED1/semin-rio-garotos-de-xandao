@@ -18,7 +18,7 @@ e executar operações algumas operações;
 typedef struct Candidato {
     char* nome;
     char* partido;
-    int numero;
+    char* numero;
     int votos;
     struct Candidato* prox;
 } Candidato;
@@ -56,7 +56,7 @@ Lista* criarLista(){
 //     return candidato;
 // }
 
-Candidato* criarCandidato(char* nome, char* partido, int numero) {
+Candidato* criarCandidato(char* nome, char* partido, char* numero) {
     Candidato* candidato = (Candidato*) calloc(1, sizeof(Candidato));  
     if (candidato == NULL) {
         return NULL;
@@ -64,15 +64,16 @@ Candidato* criarCandidato(char* nome, char* partido, int numero) {
 
     candidato->nome = (char*) calloc(strlen(nome) + 1, sizeof(char));
     candidato->partido = (char*) calloc(strlen(partido) + 1, sizeof(char));
+    candidato->numero = (char*) calloc(strlen(numero) + 1, sizeof(char));
 
-    if (candidato->nome == NULL || candidato->partido == NULL) {
-        free(candidato);  
+    if (candidato->nome == NULL || candidato->partido == NULL || candidato->numero == NULL) {
         return NULL;
     }
+
     strcpy(candidato->nome, nome);
     strcpy(candidato->partido, partido);
+    strcpy(candidato->numero, numero);
 
-    candidato->numero = numero;
     candidato->prox = NULL;
     candidato->votos = 0;
 
@@ -81,7 +82,7 @@ Candidato* criarCandidato(char* nome, char* partido, int numero) {
 
 // Função para verificar se o número de um candidato é igual ao de outro. Retorna 1 se forem iguais, retorna 0 do contrário.
 int equalsCandidato(Candidato* cand1, Candidato* cand2){
-    if(cand1->numero == cand2->numero){
+    if(strcmp(cand1->numero, cand2->numero) == 0){
         return 1;
     }
     return 0;
@@ -97,7 +98,7 @@ int temCandidato(Lista *lista){
 // Função para verificar se já existe um candidato com um determinado número na lista. Retorna 1 se existir, retorna 0 do contrário.
 int equalsCandList(Lista* lista, Candidato* cand){
     Candidato* temp = lista->start;
-    while(temp != NULL && temp->numero != cand->numero){
+    while(temp != NULL && strcmp(temp->numero, cand->numero) != 0){
         temp = temp->prox;
     }
     if(temp == NULL){
@@ -154,12 +155,12 @@ void addEnd(Lista* lista, Candidato* candidato){
 }
 
 // Função que retorna um candidato que possui um determinado numero. Retorna NULL se não encontrá-lo.
-Candidato* findCand(Lista* lista, int numero){
+Candidato* findCand(Lista* lista, char* numero){
     if(lista == NULL || lista->start == NULL){
         return NULL;
     }
     Candidato* temp = lista->start;
-    while(temp != NULL && temp->numero != numero){
+    while(temp != NULL && strcmp(temp->numero, numero) != 0){
         temp = temp->prox;
     }
     if(temp == NULL){
@@ -207,7 +208,7 @@ void removeEnd(Lista* lista){
 }
 
 // Remove um candidato de uma lista a partir do seu número
-int removerNum(Lista* lista, int numero){
+int removerNum(Lista* lista, char* numero){
     // Encontra o candidato e o salva em "temp". Salva "NULL" se não encontar o candidato
     if(lista == NULL){
         return -1;
@@ -237,13 +238,13 @@ int removerNum(Lista* lista, int numero){
 
 // Função para editar um candidato já existente em uma lista, indentificado pelo seu número. Retorna -1 se o candidato não for encontrado,
 // retorna 0 se já existir um candidato com o novo número, e retorna 1 se a edição for realizada com sucesso.
-int editarCandidato(Lista* lista, int numero, char* newName, char* newPartido, int newNumero){
+int editarCandidato(Lista* lista, char* numero, char* newName, char* newPartido, char* newNumero){
     Candidato* cand = findCand(lista, numero);
     if(cand == NULL){
         return -1;
     }
-    int temp = cand->numero;
-    cand->numero = -1;
+    char* temp = cand->numero;
+    cand->numero[0] = '\0';
     if(findCand(lista, newNumero) != NULL){
         cand->numero = temp;
         return 0;
@@ -278,7 +279,7 @@ void printCandidato(Candidato* candidato, int imprimirVotos){
     }
     printf("\nNome: %s\n", candidato->nome);
     printf("Partido: %s\n", candidato->partido);
-    printf("Número: %i\n", candidato->numero);
+    printf("Número: %s\n", candidato->numero);
     if(imprimirVotos == 1){
         printf("Votos: %i\n", candidato->votos);
     }
@@ -342,8 +343,11 @@ int isNumber(char* string){
 void addCandMain(Lista* lista){
     char* nome = (char*) malloc(SIZENOME + 1);
     char* partido = (char*) malloc(SIZEPARTIDO + 1);
-    int numero;
-    char* charNumero = (char*) malloc(SIZENUMERO + 1);
+    char* numero = (char*) malloc(SIZENUMERO + 1);
+    if(nome == NULL || partido == NULL || numero == NULL){
+        printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+        return;
+    }
     printf("\nInsira o nome do candidato: ");
     fgets(nome, SIZENOME + 1, stdin);
     removerN(nome);
@@ -351,18 +355,17 @@ void addCandMain(Lista* lista){
     fgets(partido, SIZEPARTIDO + 1, stdin);
     removerN(partido);
     printf("Insira o número do candidato: ");
-    fgets(charNumero, SIZENUMERO + 1, stdin);
-    removerN(charNumero);
-    if(isNumber(charNumero) == 0){
+    fgets(numero, SIZENUMERO + 1, stdin);
+    removerN(numero);
+    if(isNumber(numero) == 0){
         puts("Número inválido!\n");
         return;
     }
-    numero = atoi(charNumero);
-    
     if(findCand(lista, numero) != NULL){
         puts("Candidato já existente!");
         free(nome);
         free(partido);
+        free(numero);
         return;
     }
     Candidato* candidato = criarCandidato(nome, partido, numero);
@@ -374,14 +377,14 @@ void addCandMain(Lista* lista){
 // Função para remover candidato durante a execução do programa
 void removeCandMain(Lista* lista){
     if(temCandidato(lista)){
-        int num;
+        char* numero = (char*) malloc(SIZENUMERO + 1);
         printf("\nInsira o número do candidado para removê-lo (0 para cancelar): ");
-        scanf("%i", &num);
-        limparBuffer();
-        if(num == 0){
+        fgets(numero, SIZENUMERO + 1, stdin);
+        removerN(numero);
+        if(strcmp(numero, "0") == 0){
             return;
         }
-        int test = removerNum(lista, num);
+        int test = removerNum(lista, numero);
         if(test == -1){
             printf("Lista inválida!\n\n");
             return;
@@ -408,19 +411,32 @@ void editCandMain(Lista* lista){
             printf("Lista inválida!");
             return;
         }
-        int numero;
-        char* newNome = (char*) malloc(SIZENOME + 1);
-        char* newPartido = (char*) malloc(SIZEPARTIDO + 1);
-        int newNumero;
-        char* charNewNumero = (char*) malloc(SIZENUMERO + 1);
+        char* numero = (char*) malloc(SIZENUMERO + 1);
+        if(numero == NULL){
+            printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+            return;
+        }
         printf("\nInsira o número do candidato a ser editado: ");
-        scanf("%i", &numero);
+        fgets(numero, SIZENUMERO + 1, stdin);
         limparBuffer();
+        if(isNumber(numero) == 0){
+            printf("Número inválido!\n");
+            free(numero);
+            return;
+        }
         Candidato* cand = findCand(lista, numero);
         if(cand == NULL){
             printf("Candidato não encontrado.\n");
             return;
         }
+        char* newNome = (char*) malloc(SIZENOME + 1);
+        char* newPartido = (char*) malloc(SIZEPARTIDO + 1);
+        char* newNumero = (char*) malloc(SIZENUMERO + 1);
+        if (newNome == NULL || newPartido == NULL || newNumero == NULL){
+            printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+            return;
+        }
+        
         printf("Insira o novo nome: ");
         fgets(newNome, SIZENOME + 1, stdin);
         removerN(newNome);
@@ -428,21 +444,17 @@ void editCandMain(Lista* lista){
         fgets(newPartido, SIZEPARTIDO + 1, stdin);
         removerN(newPartido);
         printf("Insira o novo número: ");
-        fgets(charNewNumero, SIZENUMERO + 1, stdin);
-        removerN(charNewNumero);
-        int i = 0;
-        while(charNewNumero[i] != '\0' && i != -1){
-            if(isdigit(charNewNumero[i]) == 0){
-                i = -1;
-                break;
-            }
-            i+=1;
-        }
-        if(i == -1){
-            puts("Número inválido!\n");
+        fgets(newNumero, SIZENUMERO + 1, stdin);
+        removerN(newNumero);
+        if(isNumber(newNumero) == 0){
+            printf("Número inválido!\n");
+            free(numero);
+            free(newNome);
+            free(newPartido);
+            free(newNumero);
             return;
         }
-        newNumero = atoi(charNewNumero);
+
         int teste = editarCandidato(lista, numero, newNome, newPartido, newNumero);
         if(teste == 0){
             printf("Já existe um candidato com esse número!\n");
@@ -529,55 +541,82 @@ int iniciarConfirmar(Lista *lista){
 // Função para realização das eleições. Recebe a lista dos candidatos, e o ponteiro para a variável que guardará o número de votos nulos
 void executarEleicoes(Lista* lista, int* votosNulos){
     int j;
+    char* charJ = (char*) malloc(SIZENUMERO + 1);
     int k;
-    int numero;
+    char* charK = (char*) malloc(SIZENUMERO + 1);
+    char* numero = (char*) malloc(SIZENUMERO + 1);
+    if(charJ == NULL || charK == NULL || numero == NULL){
+        printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+        return;
+    }
+
     do{
+        j = 0;
+        k = 0;
         printf("\n1 - Votar");
         printf("\n2 - Encerrar eleições");
         printf("\nResposta: ");
-        scanf("%i", &j);
+        scanf("%s", charJ);
         limparBuffer();
-        if(j == 1 || j == 2){
+        if(isNumber(charJ) == 1){
+            j = atoi(charJ);
             if(j == 1){
-                k = 0;
                 printf("\nInsira o número do candidato: ");
-                scanf("%i", &numero);
-                limparBuffer();
-                Candidato* candidato = findCand(lista, numero);
-                if(candidato != NULL){
-                    printCandidato(candidato, 0);
-                    printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
-                    scanf("%i", &k);
-                    limparBuffer();
-                    if(k == 1){
-                        candidato->votos = candidato->votos + 1;
-                        printf("Voto registrado com sucesso! Pilililili\n");
+                fgets(numero, SIZENUMERO + 1, stdin);
+                removerN(numero);
+                if(isNumber(numero) == 1){
+                    Candidato* candidato = findCand(lista, numero);
+                    if(candidato != NULL){
+                        printCandidato(candidato, 0);
+                        printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
+                        fgets(charK, SIZENUMERO + 1, stdin);
+                        removerN(charK);
+                        if(isNumber(charK) == 1){
+                            k = atoi(charK);
+                            if(k == 1){
+                                candidato->votos = candidato->votos + 1;
+                                printf("Voto registrado com sucesso! Pilililili\n");
+                            }
+                            if(k != 1 && k != 2){
+                                printf("Opção inválida!\n");
+                            }
+                        }
+                        else{
+                            printf("Opção inválida!\n");
+                        }
                     }
-                    if(k != 1 && k != 2){
-                        printf("Opção inválida!\n");
+                    else{
+                        printf("\nCandidato inexistente! Deseja votar nulo? ");
+                        printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
+                        fgets(charK, SIZENUMERO + 1, stdin);
+                        removerN(charK);
+                        if(isNumber(charK) == 1){
+                            k = atoi(charK);
+                            if(k == 1){
+                                *votosNulos = *votosNulos + 1;
+                                printf("Voto registrado com sucesso! Pilililili\n");
+                            }
+                            if(k != 1 && k != 2){
+                                printf("Opção inválida!\n");
+                            }
+                        }
+                        else{
+                            printf("Opção inválida!\n");
+                        }
                     }
                 }
                 else{
-                    printf("\nCandidato inexistente! Deseja votar nulo? ");
-                    printf("\n1 - Confirmar \n2 - Cancelar \nResposta: ");
-                    scanf("%i", &k);
-                    limparBuffer();
-                    if(k == 1){
-                        *votosNulos = *votosNulos + 1;
-                        printf("Voto registrado com sucesso! Pilililili\n");
-                    }
-                    else if(k != 1 && k != 2){
-                        printf("Opção inválida!\n");
-                    }
+                    printf("Opção inválida!\n");
                 }
             }
-            if(j == 2){
+            else if(j == 2){
                 char senha[20];
                 printf("\nDeseja encerrar as eleições?");
                 printf("\n1 - Sim \n2 - Não \nResposta: ");
-                scanf("%i", &k);
-                limparBuffer();
-                if(k == 2 || k == 1){
+                fgets(charK, SIZENUMERO + 1, stdin);
+                removerN(charK);
+                if(isNumber(charK) == 1){
+                    k = atoi(charK);
                     if(k == 1){
                         printf("\nDigite a senha de acesso do administrador (0 para cancelar): ");
                         scanf("%19s", senha);
@@ -593,6 +632,9 @@ void executarEleicoes(Lista* lista, int* votosNulos){
                             j = 2;
                             return;
                         }
+                        else{
+                            j = 0;
+                        }
                     }
                     else{
                         j = 0;
@@ -602,6 +644,9 @@ void executarEleicoes(Lista* lista, int* votosNulos){
                     printf("Opção inválida!");
                     j = 0;
                 }
+            }
+            else{
+                printf("Opção inválida!\n");
             }
         }
         else{
@@ -629,6 +674,10 @@ int loginAdministrador(){
     return 0;
 }
 
+/* No momento, o teste abaixo
+ não está funcional!!!!
+
+
 // Teste de métrica, retorna o tempo necessário para inserir n candidatos
 double teste(Lista* lista, int n){
     if(lista == NULL){
@@ -644,7 +693,7 @@ double teste(Lista* lista, int n){
     double time = (double)(final - inicio) / CLOCKS_PER_SEC;
     return time;
 }
-
+*/
 
 
 int main(){
