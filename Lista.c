@@ -78,7 +78,7 @@ int equalsCandList(Lista* lista, Candidato* cand){
 // Função para adicionar um candidato ao início de uma lista
 void addStart(Lista* lista, Candidato* candidato){
     if(lista == NULL){
-        printf("\nLista inválida!");
+        printf("\nLista invalida!");
         return;
     }
     if(lista->start == NULL){
@@ -93,7 +93,7 @@ void addStart(Lista* lista, Candidato* candidato){
         return;
     }
     else{
-        printf("\nCandidato já existe!");
+        printf("\nCandidato ja existe!");
         return;
     }
     return;
@@ -102,7 +102,7 @@ void addStart(Lista* lista, Candidato* candidato){
 // Função para adicionar um candidato ao final de uma lista
 void addEnd(Lista* lista, Candidato* candidato){
     if(lista == NULL){
-        printf("\nLista inválida!");
+        printf("\nLista invalida!");
         return;
     }
     if(lista->end == NULL){
@@ -118,7 +118,7 @@ void addEnd(Lista* lista, Candidato* candidato){
         return;
     }
     else{
-        printf("\nCandidato já existe!\n");
+        printf("\nCandidato ja existe!\n");
     }
 }
 
@@ -261,12 +261,12 @@ void limparLista(Lista* lista){
 // Função para exibir um candidato. Se "imprimirVotos" = 1, os votos serão imprimidos. Do contrário, não serão.
 void printCandidato(Candidato* candidato, int imprimirVotos){
     if(candidato == NULL){
-        printf("\nCandidato inválido!");
+        printf("\nCandidato invalido!");
         return;
     }
     printf("\nNome: %s\n", candidato->nome);
     printf("Partido: %s\n", candidato->partido);
-    printf("Número: %s\n", candidato->numero);
+    printf("Numero: %s\n", candidato->numero);
     if(imprimirVotos == 1){
         printf("Votos: %i\n", candidato->votos);
     }

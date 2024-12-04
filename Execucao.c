@@ -18,7 +18,7 @@ void addCandMain(Lista* lista){
     char* partido = (char*) malloc(SIZEPARTIDO + 1);
     char* numero = (char*) malloc(SIZENUMERO + 1);
     if(nome == NULL || partido == NULL || numero == NULL){
-        printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+        printf("Erro de alocacao de memoria!! Contate um tecnico para resolver o problema");
         return;
     }
     printf("\nInsira o nome do candidato: ");
@@ -27,15 +27,15 @@ void addCandMain(Lista* lista){
     printf("Insira o partido do candidato: ");
     fgets(partido, SIZEPARTIDO + 1, stdin);
     removerN(partido);
-    printf("Insira o número do candidato: ");
+    printf("Insira o numero do candidato: ");
     fgets(numero, SIZENUMERO + 1, stdin);
     removerN(numero);
     if(isNumber(numero) == 0){
-        puts("Número inválido!");
+        puts("Numero invalido!");
         return;
     }
     if(findCand(lista, numero) != NULL){
-        puts("Candidato já existente!");
+        puts("Candidato ja existente!");
         free(nome);
         free(partido);
         free(numero);
@@ -51,7 +51,7 @@ void addCandMain(Lista* lista){
 void removeCandMain(Lista* lista){
     if(temCandidato(lista)){
         char* numero = (char*) malloc(SIZENUMERO + 1);
-        printf("\nInsira o número do candidado para removê-lo (0 para cancelar): ");
+        printf("\nInsira o numero do candidado para remove-lo (0 para cancelar): ");
         fgets(numero, SIZENUMERO + 1, stdin);
         removerN(numero);
         if(strcmp(numero, "0") == 0){
@@ -61,11 +61,11 @@ void removeCandMain(Lista* lista){
         int test = removerNum(lista, numero);
         free(numero);
         if(test == -1){
-            printf("Lista inválida!\n\n");
+            printf("Lista invalida!\n\n");
             return;
         }
         if(test == 0){
-            printf("Candidato não encontrado!\n");
+            printf("Candidato nao encontrado!\n");
             return;
         }
         if(test == 1){
@@ -74,7 +74,7 @@ void removeCandMain(Lista* lista){
         }
     }
     else if(!(temCandidato(lista))){
-         puts("\nNão há candiatos registrados!\n");
+         puts("\nNao ha candiatos registrados!\n");
     }
     return ;
 }
@@ -83,32 +83,32 @@ void removeCandMain(Lista* lista){
 void editCandMain(Lista* lista){
     if(temCandidato(lista)){
         if(lista == NULL){
-            printf("Lista inválida!");
+            printf("Lista invalida!");
             return;
         }
         char* numero = (char*) malloc(SIZENUMERO + 1);
         if(numero == NULL){
-            printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+            printf("Erro de alocacao de memoria!! Contate um tecnico para resolver o problema");
             return;
         }
-        printf("\nInsira o número do candidato a ser editado: ");
+        printf("\nInsira o numero do candidato a ser editado: ");
         fgets(numero, SIZENUMERO + 1, stdin);
-        limparBuffer();
+        removerN(numero);
         if(isNumber(numero) == 0){
-            printf("Número inválido!\n");
+            printf("Numero invalido!\n");
             free(numero);
             return;
         }
         Candidato* cand = findCand(lista, numero);
         if(cand == NULL){
-            printf("Candidato não encontrado.\n");
+            printf("Candidato nao encontrado.\n");
             return;
         }
         char* newNome = (char*) malloc(SIZENOME + 1);
         char* newPartido = (char*) malloc(SIZEPARTIDO + 1);
         char* newNumero = (char*) malloc(SIZENUMERO + 1);
         if (newNome == NULL || newPartido == NULL || newNumero == NULL){
-            printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+            printf("Erro de alocacao de memoria!! Contate um tecnico para resolver o problema");
             return;
         }
         
@@ -118,11 +118,11 @@ void editCandMain(Lista* lista){
         printf("Insira o novo partido: ");
         fgets(newPartido, SIZEPARTIDO + 1, stdin);
         removerN(newPartido);
-        printf("Insira o novo número: ");
+        printf("Insira o novo numero: ");
         fgets(newNumero, SIZENUMERO + 1, stdin);
         removerN(newNumero);
         if(isNumber(newNumero) == 0){
-            printf("Número inválido!\n");
+            printf("Numero invalido!\n");
             free(numero);
             free(newNome);
             free(newPartido);
@@ -133,14 +133,14 @@ void editCandMain(Lista* lista){
         int teste = editarCandidato(lista, numero, newNome, newPartido, newNumero);
         free(numero);
         if(teste == 0){
-            printf("Já existe um candidato com esse número!\n");
+            printf("Ja existe um candidato com esse numero!\n");
             return;
         }
         printf("Candidato editado com sucesso!\n");
         return;
     } 
     else if(!(temCandidato(lista))){
-         puts("Não há candidatos cadastrados\n");
+         puts("Nao ha candidatos cadastrados\n");
     }
     return ;
 }
@@ -148,14 +148,14 @@ void editCandMain(Lista* lista){
 // Função para exibir os candidatos na main
 void exibirCandMain(Lista* lista){
     if(printLista(lista, 0) == 0){
-        printf("Não há candidatos cadastrados!\n");
+        printf("Nao ha candidatos cadastrados!\n");
     }
 }
 
 // Função para confirmar se o usuário realmente deseja sair do programa, para evitar missclick
 void sairConfirmacao(int* i){
     char* resposta = (char*) malloc(SIZENUMERO + 1);
-    printf("\nDeseja sair ? (Os dados atuais não serão salvos)");
+    printf("\nDeseja sair ? (Os dados atuais nao serao salvos)");
     printf("\n1 - Sim");
     printf("\n2 - Nao");
     printf("\nResposta: ");
@@ -174,7 +174,7 @@ void sairConfirmacao(int* i){
         }
     }
     free(resposta);
-    printf("Opção inválida!\n");
+    printf("Opcao invalida!\n");
     *i = 0;
     return;
 }
@@ -185,7 +185,7 @@ int iniciarConfirmar(Lista *lista){
     char senha[20];
     if(temCandidato(lista)){
 
-        printf("\nDeseja iniciar as eleições? (As edições serão desabilitadas)");
+        printf("\nDeseja iniciar as eleicoes? (As edicoes serao desabilitadas)");
         printf("\n1 - Sim");
         printf("\n2 - Nao");
         printf("\nResposta: ");
@@ -212,10 +212,10 @@ int iniciarConfirmar(Lista *lista){
         if(i == 2){
             return 0;
         }
-        printf("\nOpção inválida!\n");
+        printf("\nOpcao invalida!\n");
     }
     else if(!(temCandidato(lista)))
-        puts("Não há candidatos cadastrados");
+        puts("Nao ha candidatos cadastrados");
 
     return 0;
 }
@@ -228,7 +228,7 @@ void executarEleicoes(Lista* lista, int* votosNulos){
     char* charK = (char*) malloc(SIZENUMERO + 1);
     char* numero = (char*) malloc(SIZENUMERO + 1);
     if(charJ == NULL || charK == NULL || numero == NULL){
-        printf("Erro de alocação de memória!! Contate um técnico para resolver o problema");
+        printf("Erro de alocacao de memoria!! Contate um tecnico para resolver o problema");
         return;
     }
 
@@ -236,14 +236,14 @@ void executarEleicoes(Lista* lista, int* votosNulos){
         j = 0;
         k = 0;
         printf("\n1 - Votar");
-        printf("\n2 - Encerrar eleições");
+        printf("\n2 - Encerrar eleicoes");
         printf("\nResposta: ");
         scanf("%s", charJ);
         limparBuffer();
         if(isNumber(charJ) == 1){
             j = atoi(charJ);
             if(j == 1){
-                printf("\nInsira o número do candidato: ");
+                printf("\nInsira o numero do candidato: ");
                 fgets(numero, SIZENUMERO + 1, stdin);
                 removerN(numero);
                 if(isNumber(numero) == 1){
@@ -260,11 +260,11 @@ void executarEleicoes(Lista* lista, int* votosNulos){
                                 printf("Voto registrado com sucesso! Pilililili\n");
                             }
                             if(k != 1 && k != 2){
-                                printf("Opção inválida!\n");
+                                printf("Opção invalida!\n");
                             }
                         }
                         else{
-                            printf("Opção inválida!\n");
+                            printf("Opção invalida!\n");
                         }
                     }
                     else{
@@ -279,22 +279,22 @@ void executarEleicoes(Lista* lista, int* votosNulos){
                                 printf("Voto registrado com sucesso! Pilililili\n");
                             }
                             if(k != 1 && k != 2){
-                                printf("Opção inválida!\n");
+                                printf("Opcao invalida!\n");
                             }
                         }
                         else{
-                            printf("Opção inválida!\n");
+                            printf("Opcao invalida!\n");
                         }
                     }
                 }
                 else{
-                    printf("Opção inválida!\n");
+                    printf("Opcao invalida!\n");
                 }
             }
             else if(j == 2){
                 char senha[20];
-                printf("\nDeseja encerrar as eleições?");
-                printf("\n1 - Sim \n2 - Não \nResposta: ");
+                printf("\nDeseja encerrar as eleicoes?");
+                printf("\n1 - Sim \n2 - Nao \nResposta: ");
                 fgets(charK, SIZENUMERO + 1, stdin);
                 removerN(charK);
                 if(isNumber(charK) == 1){
@@ -323,16 +323,16 @@ void executarEleicoes(Lista* lista, int* votosNulos){
                     }
                 }
                 else{
-                    printf("Opção inválida!");
+                    printf("Opcao invalida!\n");
                     j = 0;
                 }
             }
             else{
-                printf("Opção inválida!\n");
+                printf("Opcao invalida!\n");
             }
         }
         else{
-            printf("Opção inválida!\n");
+            printf("Opcao invalida!\n");
         }
     } while(j != 2);
 }

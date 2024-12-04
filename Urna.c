@@ -54,9 +54,9 @@ int main(){
             printf("\n2 - Remover candidato");
             printf("\n3 - Ver candidatos");
             printf("\n4 - Editar candidato");
-            printf("\n5 - Iniciar eleições");
+            printf("\n5 - Iniciar eleicoes");
             printf("\n6 - Sair");
-            printf("\nInsira a opção desejada: ");
+            printf("\nInsira a opcao desejada: ");
             fgets(ichar, SIZENUMERO + 1, stdin);
             removerN(ichar);
             i = atoi(ichar);
@@ -83,7 +83,7 @@ int main(){
                 }
             }
             else{
-                printf("Opcao invalida\n");
+                printf("Opcao invalida!\n");
             }
         } while(i != 6 && confirmar != 1);
         if(confirmar == 1){
@@ -108,7 +108,7 @@ int main(){
     //Teste de métrica. Para realizá-lo, basta descomentá-lo e comentar todo o código anterior
     Lista* lista = criarLista();
     int nCandidatos = 50000;
-    printf("Tempo de execução: %f segundos", teste(lista, nCandidatos));
+    printf("Tempo de execucao: %f segundos", teste(lista, nCandidatos));
     */
 
     return 0;
