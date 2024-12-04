@@ -33,7 +33,6 @@ double teste(Lista* lista, int n){
     return time;
 }
 
-
 int main(){
 
     printf("\t\t### SISTEMA ELEITORAL ###\n\n");
@@ -93,6 +92,8 @@ int main(){
             printf("        \n### Resultados ###\n\n");
             printLista(lista, 1);
             printf("\nVotos nulos: %i", votosNulos);
+            printf("\n\nInsira qualquer coisa para encerrar:");
+            scanf("%i", &confirmar);
         }
     }else {
         limparLista(lista);
