@@ -65,9 +65,9 @@ Os resultados demonstram que a implementação com listas simplesmente encadeada
 ## Conclusões:
 ### Durante o desenvolvimento e execução do projeto, as seguintes lições foram aprendidas:
 
-#### Eficiência de estruturas Dinâmicas: As listas simplesmente encadeadas se mostraram adequadas para aplicações dinâmicas onde o volume de dados pode variar.
-#### Gerenciamento de Memória: O uso eficiente de ponteiros evita desperdício de memória, algo essencial em aplicações que exigem rapidez e flexibilidade.
-#### Segurança e Escalabilidade: A aplicação garantiu integridade na manipulação dos dados, um fator importante para sistemas eleitorais.
+#### O projeto demonstrou a eficiência das listas simplesmente encadeadas para aplicações dinâmicas, onde o volume de dados pode variar consideravelmente. Essa escolha foi crucial para garantir a flexibilidade e o gerenciamento eficiente de memória, evitando desperdícios e permitindo inserções e remoções rápidas.
+#### O sistema demonstrou-se não apenas funcional, mas também escalável, sendo capaz de lidar com uma quantidade significativa de candidatos sem degradação severa do desempenho. A inclusão de um mecanismo de autenticação simples reforçou o controle de acesso, permitindo que somente usuários autorizados realizassem operações críticas, o que é fundamental para garantir a integridade e segurança dos dados em um ambiente eleitoral.
+#### Portanto, o projeto não só alcançou os objetivos iniciais de criar uma aplicação para gestão de eleições simples, mas também abriu caminho para futuras expansões, como a integração de interfaces mais amigáveis, algoritmos de segurança aprimorados e maior robustez na manipulação de grandes volumes de dados. Este trabalho representa um passo importante na compreensão e implementação de sistemas que requerem eficiência, escalabilidade e segurança, servindo de base para projetos mais complexos no futuro.
 
 # Execução do programa:  
 ![teste](https://github.com/user-attachments/assets/12dd78d2-4449-4010-8680-c476e2fa8018)
