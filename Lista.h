@@ -67,4 +67,7 @@ void printCandidato(Candidato* candidato, int imprimirVotos);
 // Se "imprimirVotos" = 1, os votos serão imprimidos. Do contrário, não serão.
 int printLista(Lista* lista, int imprimirVotos);
 
+// Recebe uma lista de candidatos e a coloca em ordem decrescente
+void orderDecrescente(Lista* lista);
+
 #endif

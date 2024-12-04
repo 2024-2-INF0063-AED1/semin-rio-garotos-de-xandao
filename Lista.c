@@ -290,3 +290,39 @@ int printLista(Lista* lista, int imprimirVotos){
     }
     return 1;
 }
+
+// Recebe uma lista de candidatos e a coloca em ordem decrescente
+void orderDecrescente(Lista* lista){
+    if(lista == NULL || lista->start == NULL) return;
+
+    Candidato* cand = lista->start;
+    Candidato* maior;
+    Candidato* temp;
+    while(cand != NULL){
+        maior = cand;
+        temp = cand->prox;
+        while(temp != NULL){
+            if(temp->votos > maior->votos){
+                maior = temp;
+            }
+            temp = temp->prox;
+        }
+        if(cand != maior){
+            char* nome = cand->nome;
+            char* partido = cand->partido;
+            char* numero = cand->numero;
+            int votos = cand->votos;
+
+            cand->nome = maior->nome;
+            cand->partido = maior->partido;
+            cand->numero = maior->numero;
+            cand->votos = maior->votos;
+
+            maior->nome = nome;
+            maior->partido = partido;
+            maior->numero = numero;
+            maior->votos = votos;
+        }
+        cand = cand->prox;
+    }
+}

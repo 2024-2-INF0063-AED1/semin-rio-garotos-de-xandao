@@ -90,6 +90,7 @@ int main(){
             executarEleicoes(lista, votosNulosPtr);
 
             printf("        \n### Resultados ###\n\n");
+            orderDecrescente(lista);
             printLista(lista, 1);
             printf("\nVotos nulos: %i", votosNulos);
             printf("\n\nInsira qualquer coisa para encerrar:");
