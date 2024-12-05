@@ -72,4 +72,18 @@ Os resultados demonstram que a implementação com listas simplesmente encadeada
 # Execução do programa:  
 ![teste](https://github.com/user-attachments/assets/12dd78d2-4449-4010-8680-c476e2fa8018)
 
+## Referências
+
+DEITEL, Paul; DEITEL, Harvey. C: Como Programar. 6. ed. São Paulo: Pearson, 2011. ISBN 978-85-4301-372-5. 
+
+SCHILDT, Herbert. C Completo e Total. 3. ed. São Paulo: Pearson Education do Brasil, 1995. ISBN 85-346-0595-5. 
+
+COIMBRA, Rodrigo Carneiro Munhoz. Por que a urna eletrônica é segura. Tribunal Superior Eleitoral, 2024. Disponível em: https://www.tse.jus.br/institucional/escola-judiciaria-eleitoral/publicacoes/revistas-da-eje/artigos/revista-eletronica-eje-n.-6-ano-4/por-que-a-urna-eletronica-e-segura. Acesso em: 19 nov. 2024. 
+
+EQUIPE INFOMONEY,  Como funciona a urna eletrônica?. InfoMoney, 2022. Disponível em: https://www.infomoney.com.br/politica/como-funciona-a-urna-eletronica/. Acesso em: 04 dez. 2024. 
+
+
+
+
+
 
